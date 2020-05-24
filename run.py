@@ -3,30 +3,42 @@ import asyncio, discord, sys, os, io
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding='utf-8')
 
-from discord.ext import commands
-import requests
-from bs4 import BeautifulSoup
+# import requests
+
+# .lower()
+champ_name = 'gragas'
+location = 'jungle'
 
 #crawler
-url = 'https://www.op.gg/champion/statistics'
-req = requests.get(url)
-html = req.text
-soup = BeautifulSoup(html, 'html.parser')
-
-
+url = 'https://www.op.gg/champion/'+champ_name+'/statistics/'+location+'/rune'
+# req = requests.get(url)
+# html = req.text
 
 #token path
 token_path = os.path.dirname(os.path.abspath(__file__)) + "/token.txt"
 t = open(token_path,"r",encoding="utf-8")
 token = t.read().split()[0]
 
-#bot prefix set
-bot = commands.Bot(command_prefix='!')
+client = discord.Client()
 
+@client.event
+async def on_ready():
+    await client.change_presence(status=discord.Status.online, activity=discord.Game("심해"))
+
+@client.event
+async def on_message(message):
+    if message.author.bot:
+        return None
+
+    if message.content.startswith("!링크"):
+        await message.channel.send("hi")
+
+"""
 @bot.command()
-async def test(ctx, arg):
-    await ctx.send(arg)
+async def 링크(ctx):
+    await ctx.send(url)
+"""
 
-bot.run(token)
+client.run(token)
 
 #client.run('NzEzODI5ODk3NjAwMTA2NTc3.Xsl0DA.sLqw8o_855BJ5O2UGDFU8wvhOoI')
